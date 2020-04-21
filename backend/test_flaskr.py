@@ -42,11 +42,27 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue(data["questions"])
         self.assertEqual(len(data["questions"]), 10)
-        self.assertEqual(data["total_questions"], 19)
+        self.assertTrue(data["total_questions"])
         self.assertTrue(data["current_categories"])
         self.assertEqual(len(data["current_categories"]), 4)
         self.assertTrue(data["categories"])
         self.assertEqual(len(data["categories"]), 6)
+
+    def test_get_questions_page_not_found(self):
+        pass
+    '''
+    Delete question
+    '''
+
+    def test_delete_question(self):
+        res = self.client().delete("/questions/25")
+        data = json.loads(res.data)
+
+        self.assertEqual(data["success"], True)
+        self.assertEqual(data["deleted"], 25)
+
+    def test_delete_question_not_found(arg):
+        pass
 
 
 # Make the tests conveniently executable

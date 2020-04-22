@@ -134,12 +134,12 @@ def create_app(test_config=None):
     '''
     @app.route("/questions", methods=['POST'])
     def add_question():
+        body = request.get_json()
+        question = body.get('question', None)
+        answer = body.get('answer', None)
+        difficulty = body.get('difficulty', None)
+        category = body.get('category', None)
         try:
-            body = request.get_json()
-            question = body.get('question', None)
-            answer = body.get('answer', None)
-            difficulty = body.get('difficulty', None)
-            category = body.get('category', None)
             new_question = Question(
                 question=question, answer=answer, category=category,
                 difficulty=difficulty)

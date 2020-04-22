@@ -173,15 +173,28 @@ def create_app(test_config=None):
     only question that include that string within their question.
     Try using the word "title" to start.
     '''
-
+    # add to POST questions endpoint
     '''
-  @TODO:
-  Create a GET endpoint to get questions based on category.
+    @TODO:
+    Create a GET endpoint to get questions based on category.
 
-  TEST: In the "List" tab / main screen, clicking on one of the
-  categories in the left column will cause only questions of that
-  category to be shown.
-  '''
+    TEST: In the "List" tab / main screen, clicking on one of the
+    categories in the left column will cause only questions of that
+    category to be shown.
+    '''
+    @app.route('/questions/<int:category>')
+    def get_question_by_cat(category):
+        try:
+            selection = Question.query.filter(
+                Question.category == category).all()
+            questions = [question.format() for question in selection]
+
+            return jsonify({
+                "success": True,
+                "questions": questions
+            })
+        except:
+            abort(422)
 
     '''
   @TODO:

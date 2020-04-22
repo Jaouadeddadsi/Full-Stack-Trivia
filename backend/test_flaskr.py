@@ -55,11 +55,11 @@ class TriviaTestCase(unittest.TestCase):
     '''
 
     def test_delete_question(self):
-        res = self.client().delete("/questions/27")
+        res = self.client().delete("/questions/28")
         data = json.loads(res.data)
 
         self.assertEqual(data["success"], True)
-        self.assertEqual(data["deleted"], 27)
+        self.assertEqual(data["deleted"], 28)
 
     def test_delete_question_not_found(arg):
         pass
@@ -75,6 +75,18 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(data['success'], True)
+
+    '''
+    Search Question
+    '''
+
+    def test_search_question(self):
+        res = self.client().post('/questions',
+                                 json={'search': 'title'})
+        data = json.loads(res.data)
+
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
 
 
 # Make the tests conveniently executable

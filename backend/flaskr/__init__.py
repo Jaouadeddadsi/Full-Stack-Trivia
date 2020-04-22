@@ -49,12 +49,13 @@ def create_app(test_config=None):
     @app.route('/categories')
     def get_categories():
         try:
-            categories = Category.query.order_by(Category.id).all()
-            formated_categories = [category.format()
-                                   for category in categories]
+            categories = {}
+            for cat in Category.query.order_by(Category.id).all():
+                categories[cat.id] = cat.type
+
             return jsonify({
                 "success": True,
-                "categories": formated_categories
+                "categories": categories
             })
         except:
             abort(422)
@@ -80,17 +81,15 @@ def create_app(test_config=None):
             if len(current_questions) == 0:
                 page_exist = False
                 raise Exception('page not found')
-            categories = Category.query.all()
-            current_categories_id = [
-                question["category"] for question in current_questions]
-            current_categories = filter(
-                lambda x: x.id in current_categories_id, categories)
+            categories = {}
+            for cat in Category.query.all():
+                categories[cat.id] = cat.type.lower()
             return jsonify({
                 "success": True,
                 "questions": current_questions,
                 "total_questions": len(selection),
-                "current_categories": [cat.type for cat in list(current_categories)],
-                "categories": [cat.type for cat in categories]
+                "current_category": None,
+                "categories": categories
             })
         except:
             if not page_exist:
@@ -140,16 +139,18 @@ def create_app(test_config=None):
         answer = body.get('answer', None)
         difficulty = body.get('difficulty', None)
         category = body.get('category', None)
-        search = body.get('search', None)
+        searchTerm = body.get('searchTerm', None)
         try:
-            if search:
+            if searchTerm:
                 selection = Question.query.filter(
-                    Question.question.like(f'%{search}%'))
+                    Question.question.like(f'%{searchTerm}%'))
                 search_questions = [question.format()
                                     for question in selection]
                 return jsonify({
                     "success": True,
-                    "questions": search_questions
+                    "questions": search_questions,
+                    "total_questions": len(search_questions),
+                    "current_category": None
                 })
 
             new_question = Question(
@@ -182,36 +183,38 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that
     category to be shown.
     '''
-    @app.route('/questions/<int:category>')
+    @app.route('/categories/<int:category>/questions')
     def get_question_by_cat(category):
         try:
             selection = Question.query.filter(
                 Question.category == category).all()
             questions = [question.format() for question in selection]
-
+            current_category = Category.query.get(category).type
             return jsonify({
                 "success": True,
-                "questions": questions
+                "questions": questions,
+                "total_questions": len(selection),
+                "current_category":  current_category
             })
         except:
             abort(422)
 
     '''
-  @TODO:
-  Create a POST endpoint to get questions to play the quiz.
-  This endpoint should take category and previous question parameters
-  and return a random questions within the given category,
-  if provided, and that is not one of the previous questions.
+    @TODO:
+    Create a POST endpoint to get questions to play the quiz.
+    This endpoint should take category and previous question parameters
+    and return a random questions within the given category,
+    if provided, and that is not one of the previous questions.
 
-  TEST: In the "Play" tab, after a user selects "All" or a category,
-  one question at a time is displayed, the user is allowed to answer
-  and shown whether they were correct or not.
-  '''
+    TEST: In the "Play" tab, after a user selects "All" or a category,
+    one question at a time is displayed, the user is allowed to answer
+    and shown whether they were correct or not.
+    '''
 
     '''
-  @TODO:
-  Create error handlers for all expected errors
-  including 404 and 422.
-  '''
+    @TODO:
+    Create error handlers for all expected errors
+    including 404 and 422.
+    '''
 
     return app

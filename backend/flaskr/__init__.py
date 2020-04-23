@@ -112,6 +112,7 @@ def create_app(test_config=None):
             question = Question.query.filter(
                 Question.id == question_id).one_or_none()
             if question is None:
+                question_found = False
                 raise Exception("Question Not found")
             question.delete()
             return jsonify({

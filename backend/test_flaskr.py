@@ -58,11 +58,14 @@ class TriviaTestCase(unittest.TestCase):
     '''
 
     def test_delete_question(self):
-        res = self.client().delete("/questions/31")
+        question = Question(question="Q", answer="A",
+                            category=1, difficulty=1)
+        question.insert()
+        res = self.client().delete(f'/questions/{question.id}')
         data = json.loads(res.data)
 
         self.assertEqual(data["success"], True)
-        self.assertEqual(data["deleted"], 31)
+        self.assertEqual(data["deleted"], question.id)
 
     def test_delete_question_not_found(self):
         res = self.client().delete("/questions/1000")

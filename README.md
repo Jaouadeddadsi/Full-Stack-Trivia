@@ -343,7 +343,7 @@ The API will return three error types when requests fail:
 }
 ```
 
-## POST /quizzes
+### POST /quizzes
 
 - General: - Returns success value and a random question object from the submitted category and doesn't belong to the previous questions list.
 
@@ -361,3 +361,11 @@ The API will return three error types when requests fail:
   "success": true
 }
 ```
+
+# Author
+
+    Jaouad Eddadsi
+
+# Acknowledgments
+
+Many thanks to Udacity for this amazing project

@@ -97,6 +97,7 @@ def create_app(test_config=None):
 
     @app.route("/questions", methods=['POST'])
     def add_question():
+        search_found = True
         body = request.get_json()
         question = body.get('question', None)
         answer = body.get('answer', None)
@@ -107,7 +108,10 @@ def create_app(test_config=None):
         try:
             if searchTerm:
                 selection = Question.query.filter(
-                    Question.question.like(f'%{searchTerm}%'))
+                    Question.question.like(f'%{searchTerm}%')).all()
+                if len(selection) == 0:
+                    search_found = False
+                    raise Exception("not found")
                 search_questions = [question.format()
                                     for question in selection]
                 categories = [question['category'] for question in
@@ -130,6 +134,8 @@ def create_app(test_config=None):
                 "created": new_question.id
             })
         except:
+            if not search_found:
+                abort(404)
             abort(422)
 
     @app.route('/categories/<int:category>/questions')

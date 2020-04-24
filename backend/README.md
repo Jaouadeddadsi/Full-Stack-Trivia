@@ -111,7 +111,12 @@ The API will return three error types when requests fail:
     "5": "entertainment",
     "6": "sports"
   },
-  "current_category": null,
+  "current_category": [
+    1,
+    2,
+    3,
+    4
+  ],
   "questions": [
     {
       "answer": "Agra",
@@ -175,19 +180,11 @@ The API will return three error types when requests fail:
       "difficulty": 4,
       "id": 23,
       "question": "Which dung beetle was worshipped by the ancient Egyptians?"
-    },
-    {
-      "answer": "Neil Gaiman",
-      "category": 1,
-      "difficulty": 5,
-      "id": 25,
-      "question": "Neverwhere"
     }
   ],
   "success": true,
-  "total_questions": 22
+  "total_questions": 19
 }
-
 ```
 
 #### DELETE /questions/{question_id}
@@ -226,27 +223,30 @@ The API will return three error types when requests fail:
 
 ```python
 {
-
-	"current_category": null,
-    "questions": [
-      	  {
-      	  "answer": "Maya Angelou",
-      	  "category": 4,
-      	  "difficulty": 2,
-      	  "id": 5,
-      	  "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
-      	  },
-      	  {
-      	  "answer": "Edward Scissorhands",
-      	  "category": 5,
-      	  "difficulty": 3,
-      	  "id": 6,
-      	  "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
-      	  }
-    ],
-		  "success": true,
-		  "total_questions": 2
+  "current_category": [
+    4,
+    5
+  ],
+  "questions": [
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }
+  ],
+  "success": true,
+  "total_questions": 2
 }
+
 
 ```
 
@@ -307,16 +307,16 @@ The API will return three error types when requests fail:
 
 - General: - Returns success value and a random question object from the submitted category and doesn't belong to the previous questions list.
 
-- Sample: `curl -X POST http://127.0.0.1:5000/quizzes -H "Content-Type: application/json" -d '{"previous_questions": [], "quiz_category": {"id": 4, "type": "History"}}'`
+- Sample: `curl -X POST http://127.0.0.1:5000/quizzes -H "Content-Type: application/json" -d '{"previous_questions": [5, 9], "quiz_category": {"id": 4, "type": "History"}}'`
 
 ```python
 {
   "question": {
-    "answer": "Maya Angelou",
+    "answer": "George Washington Carver",
     "category": 4,
     "difficulty": 2,
-    "id": 5,
-    "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    "id": 12,
+    "question": "Who invented Peanut Butter?"
   },
   "success": true
 }

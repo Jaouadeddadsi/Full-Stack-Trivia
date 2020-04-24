@@ -321,3 +321,18 @@ The API will return three error types when requests fail:
   "success": true
 }
 ```
+
+### Tests
+
+In order to run tests navigate to the backend folder and run the following commands:
+
+```shell
+dropdb trivia_test
+createdb trivia_test
+psql trivia_test < trivia.psql
+python test_flaskr.py
+```
+
+The first time you run the tests, omit the dropdb command.
+
+All tests are kept `test_flaskr.py` file and should be maintained as updates are made to app functionality.

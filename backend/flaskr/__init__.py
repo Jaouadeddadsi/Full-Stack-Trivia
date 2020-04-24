@@ -55,9 +55,12 @@ def create_app(test_config=None):
         try:
             selection = Question.query.order_by(Question.id).all()
             current_questions = paginate_questions(request, selection)
+
             if len(current_questions) == 0:
                 page_exist = False
                 raise Exception('page not found')
+            current_category = list(set([q["category"]
+                                         for q in current_questions]))
             categories = {}
             for cat in Category.query.all():
                 categories[cat.id] = cat.type.lower()
@@ -65,7 +68,7 @@ def create_app(test_config=None):
                 "success": True,
                 "questions": current_questions,
                 "total_questions": len(selection),
-                "current_category": None,
+                "current_category": current_category,
                 "categories": categories
             })
         except:
@@ -100,17 +103,22 @@ def create_app(test_config=None):
         difficulty = body.get('difficulty', None)
         category = body.get('category', None)
         searchTerm = body.get('searchTerm', None)
+
         try:
             if searchTerm:
                 selection = Question.query.filter(
                     Question.question.like(f'%{searchTerm}%'))
                 search_questions = [question.format()
                                     for question in selection]
+                categories = [question['category'] for question in
+                              search_questions]
+                current_category = list(set(categories))
+
                 return jsonify({
                     "success": True,
                     "questions": search_questions,
                     "total_questions": len(search_questions),
-                    "current_category": None
+                    "current_category": current_category
                 })
 
             new_question = Question(
